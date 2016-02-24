@@ -1,0 +1,19 @@
+insert clothing shirt 2655475768999999999999999999999999999999999999999999999999999999999990 1.6 1
+insert electronics PS3 300 1 5 F NM
+insert groceries cabbage 2.005 5 1 NP
+
+
+
+
+
+
+
+
+search groceries
+search 2
+insert electronics PS4 300.05 1 4 F aa
+insert clothing pants 2 1 1
+update shirt 5
+print
+update shirt -5
+print
