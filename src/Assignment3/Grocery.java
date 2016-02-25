@@ -1,13 +1,16 @@
 package Assignment3;
-public class Grocery extends Item { //variables, constructor here
+public class Grocery extends Item 
+{ 
 	
-	protected String perishable;       // 0 means no, 1 means yes
+	protected String perishable;       
 
+	//retrieve string containing perishable/non-perishable status of item
 	public String getPerishable()
 	{
 		return perishable;
 	}
 
+	// set perishable/non-perishable status of item
 	public void setPerishable( String canPerish)
 	{
 		perishable = canPerish;
@@ -16,7 +19,7 @@ public class Grocery extends Item { //variables, constructor here
 	public Grocery (String name, double price, int quantity, int weight,String perish)
 	{
 		
-		super(name, price, quantity , weight);
+		super(name, price, quantity , weight);   // using item class constructor
 		this.perishable= perish;
 		
 		
@@ -27,26 +30,27 @@ public class Grocery extends Item { //variables, constructor here
 		double final_price;
 		double shippingPrice = 20.0; 
 		shippingPrice= shippingPrice* weight * quantity;
-		if (perishable.equalsIgnoreCase("p"))                   // if perishable, premium shipping required
+		if (perishable.equalsIgnoreCase("p"))             // if perishable, premium shipping required
 		{
 			shippingPrice *= 1.20;
 		}
 		final_price = price * quantity + shippingPrice;
-		final_price = roundPrice(final_price,2);
+		final_price = roundPrice(final_price,2);            // round final_price to at most 2 decimal places
 		return final_price;
 	}
 	
+	// print information about this grocery item
 	void printItemAttributes () 
 	{
 		System.out.println("Item name: " + this.name);
-		System.out.println("Price: "+ this.price);     // need to round to 2 decimal places
+		System.out.println("Price: "+ this.price);     
 		System.out.println("Quantity: " +this.quantity);
 		System.out.println("Weight: " +this.weight); 
 		if(perishable.equalsIgnoreCase("p"))
 			System.out.println("Perishable");
 		else
 			System.out.println("Not Perishable");
-		System.out.println("Total Price: " +this.calculatePrice());   // need to round to 2 decimal places
+		System.out.println("Total Price: " +this.calculatePrice());   
 		System.out.println("");
 	}
 	

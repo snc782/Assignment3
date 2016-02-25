@@ -5,10 +5,21 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-
+// this is the class containing the main file
 public class ShoppingCartDriver
 {
-	static ArrayList<Item> shoppingCart = new ArrayList<Item>();
+	static ArrayList<Item> shoppingCart = new ArrayList<Item>();   //every object goes here
+	
+	
+	
+	
+	/******************************************************************************
+	* Method Name: processLinesInFIle                                             *
+	* Purpose: Opens the file specified in String filename, reads each line in it *
+	*          Invokes process () on each line in the file                        *
+	*                                                                             *
+	* Returns: None                                                               *
+	******************************************************************************/
 	
 	public static void processLinesInFile (String filename) 
 	{ 
@@ -20,8 +31,8 @@ public class ShoppingCartDriver
 			
 			for (String s = reader.readLine(); s != null; s = reader.readLine()) 
 			{
-				process(s);
-				//System.out.println(pigLatin);
+				process(s);               // where the command from a line will be processed
+				
 			}
 			
 			reader.close();
@@ -37,12 +48,22 @@ public class ShoppingCartDriver
 			e.printStackTrace();
 			System.exit(-1);
 		}
-	}	
+	}
+	
+	
+	/******************************************************************************
+	* Method Name: main                                                           *
+	* Purpose: Reads the input from a text file line by line that contains        *
+	*          commands for the shopping cart. It calls the processLinesInFile    *
+	*          method which calls the process method to process commands          *
+	* Returns: None                                                               *
+	******************************************************************************/
+	
   public static void main(String[] args)   
   { // TODO Auto-generated method stub
     //Open file; file name specified in args (command line) 
 	//Parse input, take appropriate actions. 
-	  //Stub for arraylist.
+	  
 	  
 	  if (args.length != 1) 
 		{
@@ -51,46 +72,45 @@ public class ShoppingCartDriver
 		}
 		processLinesInFile (args[0]);
 		
-	  
-	  // General code example for how to iterate an array list. You will
-	  //have to modify this heavily, to suit your needs.
-	 /* Iterator<Item> i = shoppingCart.iterator();
-	  while (i.hasNext()) 
-	  {
-		  Item temp = i.next(); 
-		  temp.calculatePrice();
-		  temp.printItemAttributes(); 
-		  //This (above) works because of polymorphism: a determination is made at runtime,
-		  //based on the inherited class type, as to which method is to
-		  //be invoked. Eg: If it is an instance
-		  // of Grocery, it will invoke the calculatePrice () method defined in Grocery.
-		  
-	  } */  
+	   
   }
+  
+	/******************************************************************************
+	* Method Name: process                                                        *
+	* Purpose: reads a line from the text file, inspects what the request from the*
+	* 		   text file is, and modifies the shoppingCart if the request is valid* 
+	* 		                                                                      *
+	* Returns: Either a message on the screen indicating that the transaction     *
+	*   	   is invalid or a modification to the shopping cart                  *
+	******************************************************************************/
   
   public static void process(String transaction)
   
   {
 	  String categoryType="";
 	  
+	  // we are sorting every object in alphabetical order inside the shoppingCart array
+	  
 	  Collections.sort(shoppingCart, new Comparator<Item>(){
-	@ Override public int compare(Item i1, Item i2){
+	  @ Override public int compare(Item i1, Item i2){
 		return (i1.getName().compareToIgnoreCase(i2.getName()));
-	}});
+	  }});
+	  
+	  // placing each part of the command in userCommand array and checking if valid
+	  
 	  String[] userCommand = transaction.split(" ");
 	  int valid = errorCheck(userCommand);
-	  if (valid==-1) return;
+	  if (valid==-1) return;                             // request invalid, skip line
 	  
 	  if(userCommand.length>1)
 		  categoryType= userCommand[1].toString();
-	  if(categoryType.equalsIgnoreCase("clothing")){}
+	  
 	  
 		  
-	  
-	  
-	  switch(valid)            // checking what the command is
+	  switch(valid)            // checking what the command from the read line is
 		{
-			case 1:
+			case 1:            //case 1: perform the insert command
+				
 				if(categoryType.equalsIgnoreCase("clothing"))
 				{
 					shoppingCart.add(new Item(userCommand[2],Double.valueOf(userCommand[3])
@@ -123,47 +143,51 @@ public class ShoppingCartDriver
 				else System.err.println("Error");
 					
 				
-			case 2:
+			case 2:                           // case 2: perform search
 				int count=0;
+				
+				//searching for item to get the item's quantity
 				for (int i=0; i<shoppingCart.size(); i++)
 				{
 					if(shoppingCart.get(i).getName().equalsIgnoreCase( userCommand[1]))
-					count+=shoppingCart.get(i).getQuantity();
+						count+=shoppingCart.get(i).getQuantity();
 									
 				}
+				
 				if (count!=0)
 				{
 					
-				
+				    // tell screen amount of an item in shopping cart
 					System.out.println("Quantity of item: " +userCommand[1] +" is " +count);
 					return;
 				}
 				
-				else
+				else                          // search could not find item
 				{
 					
 					System.err.println("Item: " + userCommand[1]+ " does not exist");
 					return;
 				}
 				
-			case 3:
+			case 3:                      // case 3: perform delete
 				count=0;
+				
+				//searching for item to delete
 				for (int i=0; i<shoppingCart.size(); i++)
 				{
 					if(shoppingCart.get(i).getName().equalsIgnoreCase(userCommand[1]))
 					{
-						
-					count+=shoppingCart.get(i).getQuantity();
-					shoppingCart.remove(i);
-					i--;
+						count+=shoppingCart.get(i).getQuantity();
+						shoppingCart.remove(i);
+						i--;
 					
 					}
 									
 				}
-				if (count==0)
+				
+				if (count==0)         // if item for delete not found, output error message
 				{
 					
-				
 					System.err.println("Item: " + userCommand[1]+ " does not exist");
 					return;
 				}
@@ -173,7 +197,8 @@ public class ShoppingCartDriver
 					return;
 				}
 			
-			case 4:
+			case 4:                       // case 4: perform update
+				
 				int i;
 				for (i=0; i<shoppingCart.size(); i++)
 				{
@@ -185,9 +210,13 @@ public class ShoppingCartDriver
 				}
 				if(i==shoppingCart.size())System.err.println("Item: " + userCommand[1]+ " does not exist");
 				break;
-			case 5:
+				
+				
+			case 5:                     // case 5: perform print
+				
 				double totalCharges=0;
-				for (i=0; i<shoppingCart.size(); i++){
+				for (i=0; i<shoppingCart.size(); i++)
+				{
 					shoppingCart.get(i).printItemAttributes();
 					totalCharges+=shoppingCart.get(i).calculatePrice();
 				}
@@ -198,19 +227,39 @@ public class ShoppingCartDriver
 	  
   }
   
+  
+	/******************************************************************************
+	* Method Name: errorCheck                                                     *
+	* Purpose: Determines if the command from a line in the text file is valid    *
+	* 		   Receives an array containing all of the parts of a command and     * 
+	* 		   communicates with lets the process method know if request is valid *
+	*                                                                             *
+	* Returns: Either a -1 to process and an error message to the screen informing*
+	*   	   the user that command is invalid. If valid, returns value 1-5      *
+	*          to the process method                                              *
+	******************************************************************************/
+  
   public static int errorCheck(String[] inputTransaction){
-	  int numberofInputs=inputTransaction.length;
-	  if(inputTransaction[0].equals(""))return -1;
 	  
-	  if(numberofInputs>1&&inputTransaction[0].equalsIgnoreCase("insert")){
-		  if(inputTransaction[1].equalsIgnoreCase("clothing")&&numberofInputs==6){
+	  int numberofInputs=inputTransaction.length;
+	  if(inputTransaction[0].equals(""))             //if line is empty, ignore line
+		  return -1;
+	  
+	  // checking if every part of command for insert is valid
+	  if(numberofInputs>1&&inputTransaction[0].equalsIgnoreCase("insert"))
+	  {
+		  // is insert valid for clothing category?
+		  if(inputTransaction[1].equalsIgnoreCase("clothing")&&numberofInputs==6)
+		  {
 			  
-			  try{
+			  try
+			  {
 				  Double.parseDouble(inputTransaction[3]);
 				  Integer.valueOf(inputTransaction[4]);
 				  Integer.valueOf(inputTransaction[5]);
 			  }
-			  catch(NumberFormatException ex){
+			  catch(NumberFormatException ex)
+			  {
 				  System.err.println("Invalid format for clothing insert");
 				  return -1;
 			  }
@@ -223,16 +272,21 @@ public class ShoppingCartDriver
 			  }
 			  else	return 1;
 		  }
-		  else if(inputTransaction[1].equalsIgnoreCase("electronics")&&numberofInputs==8){
+		  
+		  // is insert valid for electronics category?
+		  else if(inputTransaction[1].equalsIgnoreCase("electronics")&&numberofInputs==8)
+		  {
 			  
-			  try{
+			  try
+			  {
 				  Double.parseDouble(inputTransaction[3]);
 				  Integer.valueOf(inputTransaction[4]);
 				  Integer.valueOf(inputTransaction[5]);
 				  String.valueOf(inputTransaction[6]);
 				  String.valueOf(inputTransaction[7]);
 			  }
-			  catch(NumberFormatException ex){
+			  catch(NumberFormatException ex)
+			  {
 				  System.err.println("Invalid format for electronics insert");
 				  return -1;
 			  }
@@ -241,14 +295,15 @@ public class ShoppingCartDriver
 			  
 			  if(Double.valueOf(inputTransaction[3])<=0
 			     ||Integer.valueOf(inputTransaction[4])<1 ||Integer.valueOf(inputTransaction[5])<1
-			     ||!(inputTransaction[6].equalsIgnoreCase("F")||inputTransaction[6].equalsIgnoreCase("NF"))|| inputTransaction[7].length()>2
-			     ||inputTransaction[7].length()<2)
+			     ||!(inputTransaction[6].equalsIgnoreCase("F")||inputTransaction[6].equalsIgnoreCase("NF"))
+			     || inputTransaction[7].length()>2 ||inputTransaction[7].length()<2)
 			  {
 				  System.err.println("Invalid input for electronics insert");
 				  return -1;
 			  }
 			  
-			 int state = checkState(inputTransaction);
+			 int state = checkState(inputTransaction);         // checking if state is valid
+			 
 			 if(state == -1)
 			 {
 				 System.err.println("Invalid input for state");
@@ -257,9 +312,13 @@ public class ShoppingCartDriver
 			  
 			 else	return 1;
 		  }
-		  else if(inputTransaction[1].equalsIgnoreCase("groceries")&&numberofInputs==7){
+		  
+		  // is insert valid for groceries category?
+		  else if(inputTransaction[1].equalsIgnoreCase("groceries")&&numberofInputs==7)
+		  {
 			  
-			  try{
+			  try
+			  {
 				  Double.parseDouble(inputTransaction[3]);
 				  Integer.valueOf(inputTransaction[4]);
 				  Integer.valueOf(inputTransaction[5]);
@@ -272,60 +331,105 @@ public class ShoppingCartDriver
 			  }
 			  
 			  
-			  if(Double.valueOf(inputTransaction[3])<=0||Integer.valueOf(inputTransaction[4])<1||Integer.valueOf(inputTransaction[5])<1||!(inputTransaction[6].equalsIgnoreCase("P")||inputTransaction[6].equalsIgnoreCase("NP"))){
+			  if(Double.valueOf(inputTransaction[3])<=0||Integer.valueOf(inputTransaction[4])<1||
+			     Integer.valueOf(inputTransaction[5])<1||!(inputTransaction[6].equalsIgnoreCase("P")
+			     ||inputTransaction[6].equalsIgnoreCase("NP")))
+			  {
 				  System.err.println("Invalid input for groceries insert");
 				  return -1;
 			  }
+			  
 			  else	return 1;
 		  }
-		  else{
+		  else
+		  {
 			  System.err.println("Invalid category");
 			  return -1; 
 		  }
+	  
 	  }
-	  else if(numberofInputs>1&&inputTransaction[0].equalsIgnoreCase("search")){
-		  if(numberofInputs!=2) {
+	  
+	  
+	  
+	  //check if search command is valid
+	  else if(numberofInputs>1&&inputTransaction[0].equalsIgnoreCase("search"))
+	  {
+		  if(numberofInputs!=2) 
+		  {
 			  System.err.println("Invalid input for search");
 			  return -1;
 		  }
-		  else return 2;
+		  
+		  else return 2;           //returning 2 means you are free to perform search
 	  }
-	  else if(numberofInputs>1&&inputTransaction[0].equalsIgnoreCase("delete")){
-		  if(numberofInputs!=2) {
+	  
+	  //check if delete command is valid
+	  else if(numberofInputs>1&&inputTransaction[0].equalsIgnoreCase("delete"))
+	  {
+		  
+		  if(numberofInputs!=2) 
+		  {
 			  System.err.println("Invalid input for delete");
 			  return -1;
 		  }
-		  else return 3;
-	  }
-	  else if(numberofInputs>1&&inputTransaction[0].equalsIgnoreCase("update")&&numberofInputs==3){
 		  
-		  try{
+		  else return 3;           // returning 3 means you are free to perform delete
+	  }
+	  
+	  // checking if update command is valid
+	  else if(numberofInputs>1&&inputTransaction[0].equalsIgnoreCase("update")&&numberofInputs==3)
+	  {
+		  
+		  try
+		  {
 			  Integer.valueOf(inputTransaction[2]);
 		  }
-		  catch(NumberFormatException ex){
+		  catch(NumberFormatException ex)
+		  {
 			  System.err.println("Invalid format for update");
 			  return -1;
 		  }
 		  
-		  if(Integer.valueOf(inputTransaction[2])<0) {
+		  if(Integer.valueOf(inputTransaction[2])<0) 
+		  {
 			  System.err.println("Invalid input for update");
 			  return -1;
 		  }
-		  else return 4;
+		  else return 4;           // returning 4 means you are free to perform update
 	  }
-	  else if(numberofInputs>=1&&inputTransaction[0].equalsIgnoreCase("print")){
-		  if(numberofInputs!=1) {
+	  
+	  // checking if print command is valid
+	  else if(numberofInputs>=1&&inputTransaction[0].equalsIgnoreCase("print"))
+	  {
+		  if(numberofInputs!=1) 
+		  {
 			  System.err.println("Invalid input for print");
 			  return -1;
 		  }
-		  else return 5;
+		  
+		  else return 5;           // returning 5 means you are free to perform print
 	  }
-	  else{
+	  
+	  
+	  else                        // first command word is invalid
+	  {
 		  System.err.println("Invalid Operation");
 		  return -1;
 	  }
 	  
+	  
   }
+  
+  
+	/******************************************************************************
+	* Method Name: checkState                                                     *
+	* Purpose: Receives the 7th component of the command which should contain an  *
+	* 		   abbreviation for a state informs the check error if the state      * 
+	* 		   abbreviation is valid                                              *
+	*                                                                             *
+	* Returns: Either a 0 to indicate state is valid or a -1                      *
+	*   	   is valid or                                                        *
+	******************************************************************************/
   
   public static int checkState(String[] inputTransaction)
   {
